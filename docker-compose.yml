@@ -1,0 +1,28 @@
+version: '3'
+services:
+  maplestory:
+    networks:
+      - backend
+    build: .
+    depends_on:
+      - db
+    environment:
+      WAIT_HOSTS: db:3306
+    
+  db:
+    networks:
+      - backend
+    ports:
+      - "3306:3306"
+    image: mariadb:10.11.5
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "heavenms"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: ""
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+
+networks:
+  backend:
+    driver: bridge
